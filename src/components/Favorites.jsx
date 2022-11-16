@@ -88,6 +88,19 @@ export class Favorites extends Component {
         })
     }
 
+    deleteFavorite = (movieObj) => {
+        let localData = JSON.parse(localStorage.getItem('movies') || '[]');
+        localData = localData.filter(m => {
+            return m.id != movieObj.id
+        })
+
+        this.setState({
+            movies: [...localData]
+        });
+
+        localStorage.setItem('movies', JSON.stringify(localData));
+    }
+
 
     render() {
 
@@ -105,8 +118,6 @@ export class Favorites extends Component {
 
         if (this.state.currgen !== 'All Genres')
             filterArr = filterArr.filter(movieObj => genreids[movieObj.genre_ids[0]] === this.state.currgen)
-        // else
-        // filterArr = this.state.movies
 
 
         return (
@@ -136,9 +147,6 @@ export class Favorites extends Component {
                             type="text" name="" id="" placeholder='Search'
                             className='flex-grow outline-none flex-shrink w-20 bg-transparent border-2 border-gray-300 focus:border-gray-400 py-1 pl-2 rounded-md '
                         />
-                        <input type="number" name="" id="" placeholder='Rating'
-                            className='flex-grow outline-none flex-shrink w-20 bg-transparent border-2 border-gray-300 focus:border-gray-400 py-1 pl-2 rounded-md '
-                        />
                     </div>
                     {/* favorites table  */}
                     <table className='mt-1 text-center '>
@@ -155,8 +163,8 @@ export class Favorites extends Component {
                                     <div className='flex items-center space-x-0.5 '>
                                         <span>Popularity</span>
                                         <div className='flex flex-col justify-center text-gray-700'>
-                                            <FaSortUp className={`text-lg translate-y-1.5  ${this.state.popularity === true ? 'text-emerald-500' : ''}`} />
-                                            <FaSortDown className={`text-lg -translate-y-1.5  ${this.state.popularity === false ? 'text-emerald-500' : ''}`} />
+                                            <FaSortUp className={`text-lg translate-y-1.5  ${this.state.popularity === true ? 'text-sky-500' : ''}`} />
+                                            <FaSortDown className={`text-lg -translate-y-1.5  ${this.state.popularity === false ? 'text-sky-500' : ''}`} />
                                         </div>
                                     </div>
                                 </th>
@@ -166,8 +174,8 @@ export class Favorites extends Component {
                                     <div className='flex items-center space-x-0.5 '>
                                         <span>Rating</span>
                                         <div className='flex flex-col justify-center text-gray-700'>
-                                            <FaSortUp className={`text-lg translate-y-1.5  ${this.state.rating === true ? 'text-emerald-500' : ''}`} />
-                                            <FaSortDown className={`text-lg -translate-y-1.5  ${this.state.rating === false ? 'text-emerald-500' : ''}`} />
+                                            <FaSortUp className={`text-lg translate-y-1.5  ${this.state.rating === true ? 'text-sky-500' : ''}`} />
+                                            <FaSortDown className={`text-lg -translate-y-1.5  ${this.state.rating === false ? 'text-sky-500' : ''}`} />
                                         </div>
                                     </div>
                                 </th>
@@ -175,46 +183,51 @@ export class Favorites extends Component {
                             </tr>
 
                             {/* main body  */}
-                            {filterArr.map(({ original_title, genre_ids, popularity, id, vote_average, backdrop_path }) => (
-                                <tr
-                                    key={id}
-                                    className='border-b border-gray-200 '>
-                                    <td className='py-2 text-left font-semibold flex flex-col lg:flex-row lg:space-x-2 lg:items-center'>
-                                        <img src={`https://image.tmdb.org/t/p/original${backdrop_path}`} alt=""
-                                            className='w-16 xs:w-20 lg:w-28 rounded-md'
-                                        />
-                                        <h3 className=''> {original_title}</h3>
-                                    </td>
-                                    <td>{genreids[genre_ids[0]]}</td>
-                                    <td>
-                                        <div className='flex items-center space-x-0.5 justify-center'>
-                                            <WiStars className='text-orange-500 text-xl' />
-                                            <span>
-                                                {popularity}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className='text-center  '>
-                                        <div className='grid place-items-center'>
-                                            <div className='flex items-center space-x-0.5'>
-                                                <span>
-                                                    {vote_average}
-                                                </span>
-                                                <AiTwotoneStar className='my-auto text-amber-400' />
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className='grid py-3 my-auto place-items-center'>
-                                        <div
-                                            className='flex items-center cursor-pointer  space-x-2 bg-rose-500 active:bg-rose-700 hover:bg-rose-600 select-none  py-1 mt-1 text-white px-2 rounded-md shadow-md hover:shadow-rose-200 shadow-gray-100'>
-                                            <span>Delete</span>
-                                            <MdOutlineDelete
-                                                className='text-white hidden sm:inline'
+                            {filterArr.map((movieObj) => {
+                                const { original_title, genre_ids, popularity, id, vote_average, backdrop_path } = movieObj;
+                                return (
+                                    <tr
+                                        key={id}
+                                        className='border-b border-gray-200 '>
+                                        <td className='py-2 text-left font-semibold flex flex-col lg:flex-row lg:space-x-2 lg:items-center'>
+                                            <img src={`https://image.tmdb.org/t/p/original${backdrop_path}`} alt=""
+                                                className='w-16 xs:w-20 lg:w-28 rounded-md'
                                             />
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                            <h3 className=''> {original_title}</h3>
+                                        </td>
+                                        <td>{genreids[genre_ids[0]]}</td>
+                                        <td>
+                                            <div className='flex items-center space-x-0.5 justify-center'>
+                                                <WiStars className='text-orange-500 text-xl' />
+                                                <span>
+                                                    {popularity}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className='text-center  '>
+                                            <div className='grid place-items-center'>
+                                                <div className='flex items-center space-x-0.5'>
+                                                    <span>
+                                                        {vote_average}
+                                                    </span>
+                                                    <AiTwotoneStar className='my-auto text-amber-400' />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className='grid py-3 my-auto place-items-center'>
+                                            <div
+                                                onClick={() => { this.deleteFavorite(movieObj) }}
+                                                className='flex items-center cursor-pointer  space-x-2 bg-rose-500 active:bg-rose-700 hover:bg-rose-600 select-none  py-1 mt-1 text-white px-2 rounded-md shadow-md hover:shadow-rose-200 shadow-gray-100'>
+                                                <span>Delete</span>
+                                                <MdOutlineDelete
+                                                    className='text-white hidden sm:inline'
+                                                />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                            )}
 
                         </tbody>
                     </table>

@@ -11,8 +11,6 @@ function App() {
     <BrowserRouter>
       <div className='relative w-full h-screen overflow-y-scroll bg-gray-50 max-w-[1700px] mx-auto'>
         <Navbar />
-        <div>
-        </div>
         <Routes>
           <Route path='/' element={<>
             <Banner />

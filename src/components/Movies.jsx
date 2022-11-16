@@ -59,7 +59,6 @@ export class Movies extends Component {
     // console.log(localData[0].id)
     if (this.state.favorites.includes(movieObj.id)) {
       localData = localData.filter((m) => {
-        console.log(m.id)
         return (m.id != movieObj.id)
       })
     }
