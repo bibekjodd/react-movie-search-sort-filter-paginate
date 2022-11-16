@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import spinner from '../spinner.png'
 import axios from 'axios';
-import Banner from './Banner';
 
 export class Movies extends Component {
   constructor() {
@@ -83,7 +82,6 @@ export class Movies extends Component {
   render() {
     return (
       <>
-        <Banner />
         {this.state.loading && <img
           src={spinner}
           alt=""
